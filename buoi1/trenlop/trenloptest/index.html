@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Từ điển Thẻ HTML - Tuần 2</title>
+  </head>
+
+  <body>
+    <!-- PHẦN HEADER SỬ DỤNG THẺ NGỮ NGHĨA -->
+    <header>
+      <h1>Từ điển Thẻ HTML</h1>
+      <p>
+        Trang này tổng hợp các thẻ HTML cơ bản được học trong Tuần 2, cùng với ý
+        nghĩa và tên tiếng Anh đầy đủ của chúng.
+      </p>
+      <hr />
+    </header>
+
+    <!-- PHẦN NỘI DUNG CHÍNH, CHỨA BẢNG DỮ LIỆU -->
+    <main>
+      <h2>Bảng tra cứu nhanh</h2>
+
+      <!-- SỬ DỤNG BẢNG ĐỂ TRÌNH BÀY DỮ LIỆU MỘT CÁCH CÓ TỔ CHỨC -->
+      <table border="1" style="width: 100%">
+        <!-- TIÊU ĐỀ CỦA BẢNG -->
+        <thead>
+          <tr>
+            <th>Thẻ</th>
+            <th>Viết tắt của (Tiếng Anh)</th>
+            <th>Giải thích</th>
+          </tr>
+        </thead>
+
+        <!-- THÂN BẢNG, CHỨA CÁC DỮ LIỆU CHÍNH -->
+        <tbody>
+          <!-- Nhóm 1: Cấu trúc & Văn bản -->
+          <tr>
+            <!-- Dùng colspan để tạo tiêu đề nhóm, gộp 3 cột làm 1 -->
+            <th colspan="3">Cấu trúc chung & Văn bản</th>
+          </tr>
+          <tr>
+            <td><h1> - <h6></td>
+            <td>Heading</td>
+            <td>Thẻ tiêu đề, đánh dấu các cấp độ quan trọng của nội dung.</td>
+          </tr>
+          <tr>
+            <td><p></td>
+            <td>Paragraph</td>
+            <td>Định nghĩa một đoạn văn bản.</td>
+          </tr>
+          <tr>
+            <td><div></td>
+            <td>Division</td>
+            <td>Thẻ khối, dùng để nhóm các phần tử và chia bố cục.</td>
+          </tr>
+
+          <!-- Nhóm 2: Liên kết & Hình ảnh -->
+          <tr>
+            <th colspan="3">Liên kết & Hình ảnh</th>
+          </tr>
+          <tr>
+            <td><a></td>
+            <td>Anchor</td>
+            <td>Tạo một siêu liên kết đến trang khác hoặc một vị trí khác.</td>
+          </tr>
+          <tr>
+            <td><img></td>
+            <td>Image</td>
+            <td>Hiển thị một hình ảnh trên trang.</td>
+          </tr>
+
+          <!-- Nhóm 3: Danh sách -->
+          <tr>
+            <th colspan="3">Danh sách (List)</th>
+          </tr>
+          <tr>
+            <td><ul></td>
+            <td>Unordered List</td>
+            <td>Tạo một danh sách không có thứ tự (dấu chấm tròn).</td>
+          </tr>
+          <tr>
+            <td><ol></td>
+            <td>Ordered List</td>
+            <td>Tạo một danh sách có thứ tự (số).</td>
+          </tr>
+          <tr>
+            <td><li></td>
+            <td>List Item</td>
+            <td>Một mục trong danh sách (phải nằm trong ul hoặc ol).</td>
+          </tr>
+
+          <!-- Nhóm 4: Form (Biểu mẫu) -->
+          <tr>
+            <th colspan="3">Form (Biểu mẫu)</th>
+          </tr>
+          <tr>
+            <td><form></td>
+            <td>Form</td>
+            <td>Bao bọc các phần tử để thu thập dữ liệu người dùng.</td>
+          </tr>
+          <tr>
+            <td><input></td>
+            <td>Input</td>
+            <td>Tạo các ô nhập liệu (text, password, radio, checkbox...).</td>
+          </tr>
+          <tr>
+            <td><button></td>
+            <td>Button</td>
+            <td>Tạo một nút bấm có thể nhấn được.</td>
+          </tr>
+
+          <!-- Nhóm 5: Thẻ ngữ nghĩa -->
+          <tr>
+            <th colspan="3">Semantic HTML (Thẻ ngữ nghĩa)</th>
+          </tr>
+          <tr>
+            <td><header></td>
+            <td>Header</td>
+            <td>Định nghĩa phần đầu của trang hoặc một mục.</td>
+          </tr>
+          <tr>
+            <td><footer></td>
+            <td>Footer</td>
+            <td>Định nghĩa phần chân của trang hoặc một mục.</td>
+          </tr>
+          <tr>
+            <td><nav></td>
+            <td>Navigation</td>
+            <td>Định nghĩa khu vực chứa các liên kết điều hướng.</td>
+          </tr>
+          <tr>
+            <td><section></td>
+            <td>Section</td>
+            <td>Định nghĩa một khu vực có cùng chủ đề trong tài liệu.</td>
+          </tr>
+        </tbody>
+      </table>
+    </main>
+
+    <!-- PHẦN FOOTER SỬ DỤNG THẺ NGỮ NGHĨA -->
+    <footer>
+      <hr />
+      <p>© 2024 - HIT15-WEB-PRIVATE. Một trang web học tập đơn giản.</p>
+      <p>
+        Để tìm hiểu sâu hơn, hãy tham khảo
+        <a href="https://www.w3schools.com/html/" target="_blank"
+          >W3Schools HTML Tutorial</a
+        >.
+      </p>
+    </footer>
+  </body>
+</html>
