@@ -39,13 +39,14 @@ body {
 /* Style cho nội dung văn bản trong thẻ */
 .name {
   font-size: 2rem;
+  color: red;
 }
 .title {
   font-size: 1.25rem;
   margin-bottom: 15px;
-} 
+}
 .description {
-  color: #ffffffc8;
+  color: #545063;
   margin-bottom: 1.5rem;
 }
 
