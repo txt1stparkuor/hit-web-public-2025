@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo slice() - Phân trang</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 20px;
+            text-align: center;
+        }
+
+        /* Khung chứa danh sách */
+        #content-box {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            width: 300px;
+            margin: 0 auto 20px auto;
+            min-height: 250px;
+            /* Giữ chiều cao cố định để không bị giật */
+            padding: 10px;
+            background-color: #fafafa;
+        }
+
+        .item {
+            background: white;
+            border-bottom: 1px solid #eee;
+            padding: 10px;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        /* Các nút bấm */
+        button {
+            padding: 8px 16px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        #page-info {
+            margin: 0 15px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>📑 Ví dụ Phân Trang với slice()</h2>
+
+    <!-- Khu vực hiển thị danh sách bài viết -->
+    <div id="content-box">
+        <!-- Nội dung sẽ được JS chèn vào đây -->
+    </div>
+
+    <!-- Khu vực điều khiển phân trang -->
+    <div class="pagination">
+        <button id="btn-prev">❮ Trước</button>
+        <span id="page-info">Trang 1</span>
+        <button id="btn-next">Sau ❯</button>
+    </div>
+
+    <script>
+        // 1. TẠO DỮ LIỆU GIẢ (50 bài viết)
+        // Thay vì gõ tay, ta dùng vòng lặp để tạo mảng
+        const allPosts = [];
+        for (let i = 1; i <= 50; i++) {
+            allPosts.push(`Bài viết số ${i}: Nội dung demo...`);
+        }
+
+        // 2. THIẾT LẬP CẤU HÌNH
+        let currentPage = 1;      // Trang hiện tại
+        const itemsPerPage = 5;   // Số bài mỗi trang
+
+        // Lấy các thẻ HTML
+        const contentBox = document.getElementById('content-box');
+        const pageInfo = document.getElementById('page-info');
+        const btnPrev = document.getElementById('btn-prev');
+        const btnNext = document.getElementById('btn-next');
+
+        // 3. HÀM RENDER (QUAN TRỌNG NHẤT)
+        function renderPage(page) {
+            // --- CÔNG THỨC ỨNG DỤNG SLICE() ---
+            // Tính vị trí cắt:
+            // Trang 1: start = 0, end = 5  (lấy index 0,1,2,3,4)
+            // Trang 2: start = 5, end = 10 (lấy index 5,6,7,8,9)
+            const startIndex = (page - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+
+            // Dùng slice để trích xuất dữ liệu cho trang hiện tại
+            // slice() tạo ra mảng mới, không làm hỏng mảng gốc allPosts
+            const currentPosts = allPosts.slice(startIndex, endIndex);
+
+            // --- HIỂN THỊ RA HTML ---
+            contentBox.innerHTML = ""; // Xóa cũ
+            currentPosts.forEach(post => {
+                contentBox.innerHTML += `<div class="item">${post}</div>`;
+            });
+
+            // Cập nhật thông tin trang
+            const totalPages = Math.ceil(allPosts.length / itemsPerPage);
+            pageInfo.innerText = `Trang ${page} / ${totalPages}`;
+
+            // Ẩn/Hiện nút bấm
+            btnPrev.disabled = (page === 1); // Nếu trang 1 thì khóa nút Trước
+            btnNext.disabled = (page === totalPages); // Nếu trang cuối thì khóa nút Sau
+        }
+
+        // 4. BẮT SỰ KIỆN NÚT BẤM
+        btnPrev.addEventListener('click', () => {
+            if (currentPage > 1) {
+                currentPage--;
+                renderPage(currentPage);
+            }
+        });
+
+        btnNext.addEventListener('click', () => {
+            const totalPages = Math.ceil(allPosts.length / itemsPerPage);
+            if (currentPage < totalPages) {
+                currentPage++;
+                renderPage(currentPage);
+            }
+        });
+
+        // Chạy lần đầu tiên khi tải web
+        renderPage(currentPage);
+
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo concat() - Load More</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+            background: #f9f9f9;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        /* Khung danh sách bình luận */
+        #comment-section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+        }
+
+        .comment-item {
+            border-bottom: 1px solid #eee;
+            padding: 10px 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .comment-item:last-child {
+            border-bottom: none;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            background-color: #ddd;
+            border-radius: 50%;
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #555;
+        }
+
+        /* Nút bấm */
+        #btn-load-more {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+
+        #btn-load-more:hover {
+            background-color: #0056b3;
+        }
+
+        #btn-load-more:disabled {
+            background-color: #ccc;
+            cursor: default;
+        }
+
+        .status {
+            text-align: center;
+            margin-top: 10px;
+            color: #666;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>💬 Bình luận bài viết</h2>
+
+    <div id="comment-section">
+        <!-- Bình luận sẽ hiển thị ở đây -->
+    </div>
+
+    <button id="btn-load-more">Tải thêm bình luận cũ hơn...</button>
+    <p class="status" id="status-text"></p>
+
+    <script>
+        // 1. DỮ LIỆU BAN ĐẦU (Giả sử đang hiển thị 3 bình luận mới nhất)
+        let currentComments = [
+            { id: 1, user: "An", text: "Bài viết rất hay!" },
+            { id: 2, user: "Bình", text: "Cảm ơn tác giả đã chia sẻ." },
+            { id: 3, user: "Chi", text: "Hóng phần tiếp theo ạ." }
+        ];
+
+        // 2. DỮ LIỆU Ở "SERVER" (Giả sử còn các bình luận cũ hơn chưa tải)
+        // Chúng ta chia thành các gói nhỏ (batch) để mô phỏng việc tải từng trang
+        const moreCommentsBatch1 = [
+            { id: 4, user: "Dũng", text: "Web này giao diện đẹp quá." },
+            { id: 5, user: "Giang", text: "Cho mình xin source code với." }
+        ];
+
+        const moreCommentsBatch2 = [
+            { id: 6, user: "Hải", text: "JavaScript thú vị thật." },
+            { id: 7, user: "Lan", text: "Thử test comment cái nha." }
+        ];
+
+        // Biến đếm để giả lập việc tải lần 1, lần 2
+        let loadCount = 0;
+
+        const container = document.getElementById("comment-section");
+        const btnLoad = document.getElementById("btn-load-more");
+        const statusText = document.getElementById("status-text");
+
+        // 3. HÀM RENDER (Hiển thị dữ liệu ra màn hình)
+        function render() {
+            container.innerHTML = ""; // Xóa cũ
+            currentComments.forEach(cmt => {
+                container.innerHTML += `
+                    <div class="comment-item">
+                        <div class="avatar">${cmt.user.charAt(0)}</div>
+                        <div>
+                            <strong>${cmt.user}</strong><br>
+                            <span>${cmt.text}</span>
+                        </div>
+                    </div>
+                `;
+            });
+            statusText.innerText = `Đang hiển thị ${currentComments.length} bình luận.`;
+        }
+
+        // 4. XỬ LÝ SỰ KIỆN "TẢI THÊM" - DÙNG CONCAT()
+        btnLoad.addEventListener("click", function () {
+            let newBatch = [];
+
+            // Giả lập logic lấy dữ liệu từ server
+            if (loadCount === 0) {
+                newBatch = moreCommentsBatch1; // Lần bấm đầu tiên lấy gói 1
+            } else if (loadCount === 1) {
+                newBatch = moreCommentsBatch2; // Lần bấm thứ hai lấy gói 2
+            }
+
+            if (newBatch.length > 0) {
+                // --- KIẾN THỨC TRỌNG TÂM: concat() ---
+                // concat() KHÔNG thay đổi mảng gốc, nó trả về mảng mới.
+                // Nên ta phải gán lại: currentComments = currentComments + newBatch
+
+                currentComments = currentComments.concat(newBatch);
+
+                // Sau khi gộp xong, vẽ lại giao diện
+                render();
+
+                loadCount++; // Tăng biến đếm
+            } else {
+                // Hết dữ liệu
+                btnLoad.disabled = true;
+                btnLoad.innerText = "Đã hiển thị hết bình luận";
+            }
+
+            // Nếu đã tải hết (sau lần 2) thì khóa nút
+            if (loadCount >= 2) {
+                btnLoad.innerText = "Đã hết bình luận để tải";
+                btnLoad.disabled = true;
+            }
+        });
+
+        // Chạy lần đầu
+        render();
+
+    </script>
+
+</body>
+
+</html>

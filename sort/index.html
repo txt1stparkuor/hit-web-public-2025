@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo sort() - Sắp xếp sản phẩm</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; background-color: #f4f4f4; }
+        
+        /* Thanh điều khiển */
+        .controls {
+            margin-bottom: 20px;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        select { padding: 8px; font-size: 16px; border-radius: 4px; border: 1px solid #ccc; }
+
+        /* Lưới sản phẩm */
+        #product-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); /* Responsive grid */
+            gap: 20px;
+        }
+
+        /* Thẻ sản phẩm */
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+        .card:hover { transform: translateY(-5px); }
+        .card h3 { margin: 10px 0; font-size: 18px; }
+        .card .price { color: #d32f2f; font-weight: bold; font-size: 20px; }
+        .card .id { color: #888; font-size: 12px; }
+    </style>
+</head>
+<body>
+
+    <h1>🛍️ Shop Điện Thoại</h1>
+
+    <div class="controls">
+        <label for="sortFilter">Sắp xếp theo:</label>
+        <select id="sortFilter">
+            <option value="default">Mặc định (Mới nhất)</option>
+            <option value="asc">Giá: Thấp đến Cao</option>
+            <option value="desc">Giá: Cao đến Thấp</option>
+            <option value="az">Tên: A - Z</option>
+        </select>
+    </div>
+
+    <div id="product-list">
+        <!-- Sản phẩm sẽ được render vào đây -->
+    </div>
+
+    <script>
+        // 1. Dữ liệu gốc (Không thay đổi mảng này để còn quay lại mặc định được)
+        const products = [
+            { id: 1, name: "iPhone 15 Pro", price: 29000000 },
+            { id: 2, name: "Samsung S24 Ultra", price: 31000000 },
+            { id: 3, name: "Xiaomi Redmi Note 13", price: 4500000 },
+            { id: 4, name: "Oppo Reno 10", price: 9000000 },
+            { id: 5, name: "iPhone 11", price: 10000000 },
+            { id: 6, name: "Samsung A54", price: 8500000 }
+        ];
+
+        const productListEl = document.getElementById("product-list");
+        const sortSelectEl = document.getElementById("sortFilter");
+
+        // Hàm định dạng tiền VNĐ (cho đẹp)
+        function formatMoney(amount) {
+            return amount.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+        }
+
+        // 2. Hàm hiển thị (Render)
+        function renderProducts(list) {
+            productListEl.innerHTML = ""; // Xóa cũ
+            
+            list.forEach(product => {
+                productListEl.innerHTML += `
+                    <div class="card">
+                        <div class="id">#${product.id}</div>
+                        <h3>${product.name}</h3>
+                        <div class="price">${formatMoney(product.price)}</div>
+                    </div>
+                `;
+            });
+        }
+
+        // 3. Hàm xử lý logic sắp xếp
+        function handleSort() {
+            const type = sortSelectEl.value; // Lấy giá trị người dùng chọn
+
+            // QUAN TRỌNG: Tạo một bản sao của mảng gốc bằng [...products]
+            // Lý do: sort() sẽ làm thay đổi trực tiếp mảng. Nếu sort thẳng trên products,
+            // ta sẽ làm hỏng thứ tự mặc định ban đầu.
+            let sortedList = [...products];
+
+            if (type === 'asc') {
+                // Sắp xếp giá tăng dần (a - b)
+                sortedList.sort((a, b) => a.price - b.price);
+            } 
+            else if (type === 'desc') {
+                // Sắp xếp giá giảm dần (b - a)
+                sortedList.sort((a, b) => b.price - a.price);
+            } 
+            else if (type === 'az') {
+                // Sắp xếp tên A-Z (Dùng localeCompare cho chuỗi)
+                sortedList.sort((a, b) => a.name.localeCompare(b.name));
+            }
+            else {
+                // Mặc định: Không làm gì cả (hoặc sắp xếp theo id nếu cần)
+                // Vì sortedList là bản sao của products gốc nên nó đã đúng thứ tự ban đầu
+            }
+
+            // Vẽ lại giao diện với mảng đã sắp xếp
+            renderProducts(sortedList);
+        }
+
+        // 4. Lắng nghe sự kiện
+        sortSelectEl.addEventListener("change", handleSort);
+
+        // Chạy lần đầu
+        renderProducts(products);
+
+    </script>
+
+</body>
+</html>

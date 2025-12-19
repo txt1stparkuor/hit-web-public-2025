@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JS Infinite Scroll</title>
+    <style>
+        /* CSS tối thiểu để tạo không gian cuộn */
+        body { font-family: sans-serif; margin: 0; padding: 20px; line-height: 1.6; }
+        
+        .item {
+            background: #f0f0f0;
+            margin-bottom: 10px;
+            padding: 20px;
+            border-radius: 5px;
+            border-left: 5px solid #007bff;
+        }
+
+        /* Loading animation đơn giản */
+        .loader {
+            text-align: center;
+            padding: 20px;
+            font-weight: bold;
+            color: #666;
+            display: none; /* Mặc định ẩn */
+        }
+        .loader.show { display: block; }
+    </style>
+</head>
+<body>
+
+    <h1>📜 Demo Cuộn Vô Tận</h1>
+    
+    <!-- Nơi chứa dữ liệu -->
+    <div id="container"></div>
+
+    <!-- Biểu tượng loading (nằm dưới cùng) -->
+    <div class="loader" id="loader">⏳ Đang tải thêm dữ liệu...</div>
+
+    <script>
+        // 1. CẤU HÌNH BAN ĐẦU
+        const container = document.getElementById('container');
+        const loader = document.getElementById('loader');
+        
+        let itemCount = 0;      // Đếm tổng số item đang có
+        let isLoading = false;  // Cờ trạng thái: Đang tải hay không? (QUAN TRỌNG)
+
+        // 2. HÀM TẠO DỮ LIỆU GIẢ (Giả lập lấy từ Server)
+        // Trả về một mảng chứa 10 item mới
+        function getMockData() {
+            const newItems = [];
+            for (let i = 0; i < 10; i++) {
+                itemCount++;
+                newItems.push(`Dữ liệu số #${itemCount} - Nội dung mẫu...`);
+            }
+            return newItems;
+        }
+
+        // 3. HÀM HIỂN THỊ DỮ LIỆU LÊN MÀN HÌNH (DOM Manipulation)
+        function renderItems() {
+            // Bật cờ loading để chặn người dùng cuộn tiếp khi chưa xong
+            isLoading = true; 
+            loader.classList.add('show');
+
+            // Giả lập độ trễ của mạng (1 giây)
+            setTimeout(() => {
+                const data = getMockData();
+
+                // Tạo thẻ HTML và gắn vào container
+                data.forEach(text => {
+                    const div = document.createElement('div');
+                    div.classList.add('item');
+                    div.innerText = text;
+                    container.appendChild(div);
+                });
+
+                // Tắt loading
+                isLoading = false;
+                loader.classList.remove('show');
+            }, 1000);
+        }
+
+        // 4. LOGIC CHÍNH: BẮT SỰ KIỆN CUỘN
+        window.addEventListener('scroll', () => {
+            // Nếu đang tải rồi thì không làm gì cả (Tránh spam lệnh)
+            if (isLoading) return;
+
+            // --- CÔNG THỨC TÍNH TOÁN VỊ TRÍ CUỘN ---
+            // 1. window.innerHeight: Chiều cao cửa sổ trình duyệt bạn đang nhìn thấy.
+            // 2. window.scrollY: Bạn đã cuộn xuống bao nhiêu pixel.
+            // 3. document.body.offsetHeight: Tổng chiều cao thực tế của toàn bộ trang web.
+            
+            // Nếu (Chiều cao nhìn thấy + Phần đã cuộn) >= (Tổng chiều cao - 100px buffer)
+            // Tức là còn cách đáy 100px nữa thì tải tiếp
+            if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 100) {
+                renderItems();
+            }
+        });
+
+        // Gọi lần đầu khi vào trang để có dữ liệu ban đầu
+        renderItems();
+
+    </script>
+</body>
+</html>

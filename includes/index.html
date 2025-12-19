@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo includes() - Live Search</title>
+
+    <!-- CSS cơ bản để nhìn cho gọn (không bắt buộc) -->
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 20px;
+            text-align: center;
+        }
+
+        input {
+            padding: 10px;
+            width: 300px;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            background: #f0f0f0;
+            margin: 5px auto;
+            padding: 10px;
+            width: 300px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>🔍 Tìm kiếm món ngon</h2>
+
+    <!-- Ô nhập liệu -->
+    <input type="text" id="search-input" placeholder="Nhập tên món ăn (vd: phở)...">
+
+    <!-- Nơi hiển thị kết quả -->
+    <ul id="food-list">
+        <!-- Danh sách sẽ được JS render vào đây -->
+    </ul>
+
+    <script>
+        // 1. Dữ liệu mẫu (Mảng các chuỗi)
+        const foods = [
+            "Phở Bò Hà Nội",
+            "Bún Chả",
+            "Bánh Mì Pate",
+            "Cơm Tấm Sài Gòn",
+            "Bún Bò Huế",
+            "Mì Quảng",
+            "Gỏi Cuốn",
+            "Bánh Xèo Miền Tây",
+            "Hủ Tiếu Nam Vang"
+        ];
+
+        // 2. Lấy thẻ HTML cần thao tác
+        const inputElement = document.getElementById("search-input");
+        const listElement = document.getElementById("food-list");
+
+        // Hàm hiển thị danh sách ra màn hình
+        function renderList(items) {
+            // Xóa nội dung cũ
+            listElement.innerHTML = "";
+
+            if (items.length === 0) {
+                listElement.innerHTML = "<li>Không tìm thấy món nào!</li>";
+                return;
+            }
+
+            // Duyệt qua mảng và tạo thẻ <li>
+            items.forEach(function (item) {
+                listElement.innerHTML += `<li>${item}</li>`;
+            });
+        }
+
+        // Hiển thị toàn bộ danh sách ban đầu
+        renderList(foods);
+
+        // 3. Lắng nghe sự kiện khi người dùng gõ phím (input)
+        inputElement.addEventListener("input", function (event) {
+            // Lấy từ khóa người dùng nhập
+            const keyword = event.target.value;
+
+            // --- ỨNG DỤNG KIẾN THỨC ---
+            // Dùng filter để lọc mảng, bên trong dùng includes để kiểm tra
+            const result = foods.filter(function (foodName) {
+
+                // Chuyển cả tên món và từ khóa về chữ thường để tìm không phân biệt hoa/thường
+                // Ví dụ: "Phở" -> "phở", "PHỞ" -> "phở"
+                const foodLowerCase = foodName.toLowerCase();
+                const keywordLowerCase = keyword.toLowerCase();
+
+                // Kiểm tra xem tên món có CHỨA từ khóa không
+                return foodLowerCase.includes(keywordLowerCase);
+            });
+
+            // Hiển thị danh sách mới đã lọc
+            renderList(result);
+        });
+    </script>
+
+</body>
+
+</html>
